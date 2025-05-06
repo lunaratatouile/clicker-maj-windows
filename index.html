@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background: #0078D4;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            user-select: none;
+        }
+        #progressBar {
+            width: 300px;
+            height: 30px;
+            border: 2px solid white;
+            margin: 20px auto;
+        }
+        #progressFill {
+            height: 100%;
+            width: 0%;
+            background: #00CC6A;
+            transition: 0.3s;
+        }
+        #bsod {
+            display: none;
+            background: #012456;
+            padding: 20px;
+            text-align: left;
+        }
+        .error-code {
+            color: #B8D9FF;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="updateScreen">
+        <h1>Mise à jour de Windows</h1>
+        <p>Ne pas éteindre l'ordinateur. Cela prendra quelques minutes.</p>
+        <div id="progressBar">
+            <div id="progressFill"></div>
+        </div>
+        <div id="percentage">0%</div>
+    </div>
+
+    <div id="bsod">
+        <h2>:(</h2>
+        <p>Un problème est survenu et votre PC doit être redémarré.</p>
+        <div class="error-code">
+            Code d'erreur : MEMORY_MANAGEMENT<br>
+            Vous pouvez rechercher ce code d'erreur en ligne plus tard<br><br>
+            <span id="dumpProgress">0% de vidage de la mémoire complète</span>
+        </div>
+    </div>
+
+    <script>
+        let progress = 0;
+        let dumping = false;
+
+        document.body.onclick = () => {
+            if(progress < 100 && !dumping) {
+                progress++;
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('percentage').textContent = progress + '%';
+                
+                if(progress === 100) {
+                    setTimeout(() => {
+                        document.getElementById('updateScreen').style.display = 'none';
+                        document.getElementById('bsod').style.display = 'block';
+                        simulateDump();
+                    }, 5000);
+                }
+            }
+        };
+
+        function simulateDump() {
+            let dumpPercent = 0;
+            const dumpInterval = setInterval(() => {
+                if(dumpPercent < 100) {
+                    dumpPercent++;
+                    document.getElementById('dumpProgress').textContent = 
+                        dumpPercent + '% de vidage de la mémoire complète';
+                } else {
+                    clearInterval(dumpInterval);
+                }
+            }, 50);
+        }
+    </script>
+</body>
+</html>
